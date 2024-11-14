@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Example } from './component/example';
+import { Provider } from 'react-redux';
+import { createSlice, configureStore } from '@reduxjs/toolkit';
+
+export const exampleSlice = createSlice({
+  name: 'exampleSlice',
+  initialState: { examplelist: [] },
+  reducers: {
+    ADD: (state, action) => {
+      console.log(action); 
+      let id = state.examplelist.length;
+      let example = { id: id, ...action.payload }; 
+      state.examplelist.push(example); 
+    },
+    DELETE: (state, action) => {
+      state.examplelist = state.examplelist.filter(item => item.id !== action.payload);
+    }
+  },
+});
+
+const store = configureStore({
+  reducer: {
+    example: exampleSlice.reducer,
+  },
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <div>
+        <Example></Example>
+      </div>
+    </Provider>
   );
 }
 
